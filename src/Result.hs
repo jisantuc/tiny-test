@@ -6,6 +6,7 @@ module Result
     failure,
     fromPredicate,
     pretty,
+    isSuccess,
   )
 where
 
@@ -52,3 +53,7 @@ pretty (Result (Failure errs)) =
 fromPredicate :: Text -> Bool -> Result
 fromPredicate _ True = success
 fromPredicate msg False = failure msg
+
+isSuccess :: Result -> Bool
+isSuccess (Result (Success ())) = True
+isSuccess _ = False

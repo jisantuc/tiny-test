@@ -6,7 +6,7 @@ import Result (Result, pretty)
 data TestSuite
   = NamedTestSuite
       { suiteName :: String,
-        results :: [Result]
+        suite :: [Result]
       }
   | TestSuite [Result]
 
