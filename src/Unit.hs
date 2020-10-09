@@ -1,14 +1,12 @@
-{-# LANGUAGE OverloadedStrings #-}
+module Unit (testAdd) where
 
-module Unit () where
+import Lib (add)
+import Matchers (shouldBe)
+import Result (Result)
 
-import Data.Text (Text)
-import Expectation (Expectation (..))
-import Result (Result, failure, success)
-
-expect :: Expectation -> Result
-expect = expectMessage "condition failed"
-
-expectMessage :: Text -> Expectation -> Result
-expectMessage message (Expectation cond) =
-  if (cond) then success else failure message
+testAdd :: Result
+testAdd =
+  add 3 4 `shouldBe` 7
+    <> add 5 9 `shouldBe` 14
+    <> add (-3) 9 `shouldBe` 6
+    <> add (-3) 9 `shouldBe` 5

@@ -1,23 +1,54 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Result (Result, success, failure, pretty) where
+module Result
+  ( Result,
+    success,
+    failure,
+    fromPredicate,
+    pretty,
+  )
+where
 
 import Data.Function ((&))
 import Data.Text (Text)
-import Rainbow (Chunk, Radiant, chunk, cyan, fore, green, red)
+import Data.Validation (Validation (..))
+import Rainbow (Chunk, chunk, fore, green, red)
 
-newtype FailureReason = FailureReason Text
+newtype FailureReason = FailureReason Text deriving (Eq, Show)
 
-type Result = Either FailureReason ()
+newtype Result = Result (Validation [FailureReason] ()) deriving (Eq, Show)
+
+instance Semigroup Result where
+  Result (Success ()) <> Result (Success ()) = success
+  Result (Failure errs1) <> Result (Failure errs2) = Result (Failure (errs1 <> errs2))
+  Result (Failure errs1) <> _ = Result (Failure errs1)
+  _ <> Result (Failure errs2) = Result (Failure errs2)
+
+instance Monoid Result where
+  mempty = success
 
 success :: Result
-success = Right ()
+success = Result $ Success ()
 
 failure :: Text -> Result
-failure = Left . FailureReason
+failure = Result . Failure . (flip (:) $ []) . FailureReason
 
-pretty :: Either FailureReason b -> Chunk
-pretty (Right _) =
-  "Success!" & fore green
-pretty (Left (FailureReason err)) =
+errText :: FailureReason -> Chunk
+errText (FailureReason err) =
   chunk err & fore red
+
+errTextLine :: FailureReason -> Chunk
+errTextLine err =
+  errText err <> "\n"
+
+pretty :: Result -> Chunk
+pretty (Result (Success _)) =
+  "Success!" & fore green
+pretty (Result (Failure (err : []))) =
+  errText err
+pretty (Result (Failure errs)) =
+  mconcat $ errTextLine <$> errs
+
+fromPredicate :: Text -> Bool -> Result
+fromPredicate _ True = success
+fromPredicate msg False = failure msg
