@@ -30,4 +30,4 @@ library
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/tiny-test
+  location: https://github.com/jisantuc/tiny-test
