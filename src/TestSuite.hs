@@ -23,6 +23,6 @@ runTests :: TestSuite -> IO ()
 runTests (NamedTestSuite name results) =
   do
     putStrLn $ "Running test suite " <> name
-    const () <$> traverse (putChunkLn . pretty) results
+    const () <$> (putChunkLn . pretty . mconcat $ results)
 runTests (TestSuite results) =
   const () <$> traverse (putChunkLn . pretty) results
