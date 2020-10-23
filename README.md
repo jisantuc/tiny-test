@@ -13,3 +13,7 @@ parallel test execution or shrinking property test examples or cool recursive
 types stuff with `prop` like HSpec does since that's not really the point. You
 should not consider this for your actual testing needs, and it will not be
 published.
+
+## Good talks on property testing
+
+- John Hughes - [Building on developers' intuitions to create effective property-based tests](https://www.youtube.com/watch?v=NcJOiQlzlXQ). This talk explores some of the extra features of QuickCheck, which is I think the original framework. It covers things like labeling and getting summary stats about your tests, making sure that certain cases are covered a certain percentage of the time, and a migration from unit tests to property tests.
