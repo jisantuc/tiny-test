@@ -1,9 +1,17 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 import GHC.IO.Exception (ExitCode (..))
 import Lib (add)
 import Matchers (shouldBe)
-import Result (isSuccess)
+import Result (fromProp2, isSuccess)
 import System.Exit (exitWith)
 import TestSuite (TestSuite (..), runTests)
+
+main :: IO ()
+main = do
+  addUnitExit <- runTestSuite addUnitSuite
+  addPropExit <- addPropSuite >>= runTestSuite
+  exitWith (max addUnitExit addPropExit)
 
 runTestSuite :: TestSuite -> IO ExitCode
 runTestSuite testSuite =
@@ -21,7 +29,7 @@ runTestSuite testSuite =
 addUnitSuite :: TestSuite
 addUnitSuite =
   NamedTestSuite
-    { suiteName = "addition",
+    { suiteName = "addition unit tests",
       suite =
         [ add 3 4 `shouldBe` 7,
           add 5 9 `shouldBe` 14,
@@ -30,7 +38,12 @@ addUnitSuite =
         ]
     }
 
-main :: IO ()
-main = do
-  addUnitExit <- runTestSuite addUnitSuite
-  exitWith addUnitExit
+addPropSuite :: IO TestSuite
+addPropSuite =
+  do
+    result <- fromProp2 (\x y -> add x y `shouldBe` (x + y))
+    pure $
+      NamedTestSuite
+        { suiteName = "addition prop tests",
+          suite = [result]
+        }

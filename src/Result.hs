@@ -7,11 +7,15 @@ module Result
     fromPredicate,
     pretty,
     isSuccess,
+    fromProp,
+    fromProp2,
+    fromProp3,
   )
 where
 
+import Arbitrary (Arbitrary (..))
 import Data.Function ((&))
-import Data.Text (Text)
+import Data.Text (Text, pack)
 import Data.Validation (Validation (..))
 import Rainbow (Chunk, chunk, fore, green, red)
 
@@ -70,6 +74,40 @@ pretty (Result (Failure errs)) =
 fromPredicate :: Text -> Bool -> Result
 fromPredicate _ True = success
 fromPredicate msg False = failure msg
+
+appendText :: Text -> FailureReason -> FailureReason
+appendText txt (FailureReason err) =
+  FailureReason (err <> " " <> txt)
+
+appendInput :: Text -> Result -> Result
+appendInput txt (Result (Failure errs)) =
+  let newReasons = appendText txt <$> errs
+   in Result (Failure newReasons)
+appendInput _ win = win
+
+fromProp :: (Arbitrary a, Show a) => (a -> Result) -> IO Result
+fromProp f = do
+  as <- sample
+  let msgs = pack . ("Input: " ++) . show <$> as
+  let results = f <$> as
+  pure . mconcat $ zipWith appendInput msgs results
+
+fromProp2 :: (Arbitrary a, Arbitrary b, Show a, Show b) => (a -> b -> Result) -> IO Result
+fromProp2 f = do
+  as <- sample
+  bs <- sample
+  let msgs = pack . ("Input: " ++) . show <$> zip as bs
+  let results = zipWith f as bs
+  pure . mconcat $ zipWith appendInput msgs results
+
+fromProp3 :: (Arbitrary a, Arbitrary b, Arbitrary c, Show a, Show b, Show c) => (a -> b -> c -> Result) -> IO Result
+fromProp3 f = do
+  as <- sample
+  bs <- sample
+  cs <- sample
+  let msgs = pack . ("Input: " ++) . show <$> zip3 as bs cs
+  let results = zipWith3 f as bs cs
+  pure . mconcat $ zipWith appendInput msgs results
 
 -- | Check whether a `Result` was successful
 isSuccess :: Result -> Bool

@@ -1,13 +1,8 @@
 module PropTest (Arbitrary (..), prop, prop2, prop3) where
 
+import Arbitrary (Arbitrary (..))
 import Data.Foldable (fold)
 import Result (Result)
-
--- |
--- A data type `a` with an `Arbitrary` instance knows how to get a list
--- of values of type `a` from _somewhere_.
-class Arbitrary a where
-  sample :: IO [a]
 
 -- |
 -- For a data type of type `a` with an `Arbitrary` instance,
