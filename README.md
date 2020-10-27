@@ -17,3 +17,4 @@ published.
 ## Good talks on property testing
 
 - John Hughes - [Building on developers' intuitions to create effective property-based tests](https://www.youtube.com/watch?v=NcJOiQlzlXQ). This talk explores some of the extra features of QuickCheck, which is I think the original framework. It covers things like labeling and getting summary stats about your tests, making sure that certain cases are covered a certain percentage of the time, and a migration from unit tests to property tests.
+- Susan Potter - [Thinking in Properties](https://www.youtube.com/watch?v=PcOcgMm8_4s). This talk takes property testing past just testing functions into _testing distributed systems_. It also discusses how you can think about whether you're writing useful tests and using properties (and property tests) to formalize your thinking about your problem domain. "...really nice that we weren't constrained by the imagination of the tester." 🙃 
