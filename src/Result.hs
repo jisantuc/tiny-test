@@ -85,14 +85,24 @@ appendInput txt (Result (Failure errs)) =
    in Result (Failure newReasons)
 appendInput _ win = win
 
-fromProp :: (Arbitrary a, Show a) => (a -> Result) -> IO Result
+fromProp ::
+  (Arbitrary a, Show a) =>
+  (a -> Result) ->
+  IO Result
 fromProp f = do
   as <- sample
   let msgs = pack . ("Input: " ++) . show <$> as
   let results = f <$> as
   pure . mconcat $ zipWith appendInput msgs results
 
-fromProp2 :: (Arbitrary a, Arbitrary b, Show a, Show b) => (a -> b -> Result) -> IO Result
+fromProp2 ::
+  ( Arbitrary a,
+    Arbitrary b,
+    Show a,
+    Show b
+  ) =>
+  (a -> b -> Result) ->
+  IO Result
 fromProp2 f = do
   as <- sample
   bs <- sample
@@ -100,7 +110,16 @@ fromProp2 f = do
   let results = zipWith f as bs
   pure . mconcat $ zipWith appendInput msgs results
 
-fromProp3 :: (Arbitrary a, Arbitrary b, Arbitrary c, Show a, Show b, Show c) => (a -> b -> c -> Result) -> IO Result
+fromProp3 ::
+  ( Arbitrary a,
+    Arbitrary b,
+    Arbitrary c,
+    Show a,
+    Show b,
+    Show c
+  ) =>
+  (a -> b -> c -> Result) ->
+  IO Result
 fromProp3 f = do
   as <- sample
   bs <- sample
