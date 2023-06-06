@@ -1,7 +1,9 @@
 module TestSuite (TestSuite (..), runTests) where
 
+import Control.Monad (void)
 import Rainbow (putChunkLn)
 import Result (Result, pretty)
+import Data.Foldable (traverse_)
 
 -- |
 -- A `TestSuite` an item matching one of two shapes --
@@ -23,6 +25,6 @@ runTests :: TestSuite -> IO ()
 runTests (NamedTestSuite name results) =
   do
     putStrLn $ "Running test suite " <> name
-    const () <$> (putChunkLn . pretty . mconcat $ results)
+    void (putChunkLn . pretty . mconcat $ results)
 runTests (TestSuite results) =
-  const () <$> traverse (putChunkLn . pretty) results
+  traverse_ (putChunkLn . pretty) results

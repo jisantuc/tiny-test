@@ -11,10 +11,7 @@ import Result (Result)
 -- we can get an
 -- @IO Result@
 prop :: Arbitrary a => (a -> Result) -> IO Result
-prop f =
-  do
-    as <- sample
-    pure . fold $ f <$> as
+prop f = foldMap f <$> sample
 
 -- |
 -- For data types `a` and `b`, both of which have `Arbitrary` instances,

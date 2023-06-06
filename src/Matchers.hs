@@ -39,4 +39,4 @@ contains :: (Foldable t, Eq a, Show a) => t a -> a -> Result
 contains as a =
   let failureMessage =
         pack (show a) <> " was not contained in the collection."
-   in fromPredicate failureMessage (elem a as)
+   in fromPredicate failureMessage (a `elem` as)

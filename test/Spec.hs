@@ -3,7 +3,7 @@
 import GHC.IO.Exception (ExitCode (..))
 import Lib (add)
 import Matchers (shouldBe)
-import Result as Result
+import Result
 import System.Exit (exitWith)
 import TestSuite (TestSuite (..), runTests)
 

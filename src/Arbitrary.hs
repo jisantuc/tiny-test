@@ -10,4 +10,4 @@ class Arbitrary a where
   sample :: IO [a]
 
 instance Arbitrary Int where
-  sample = replicateM 100 ((flip mod) 100 <$> randomIO)
+  sample = replicateM 100 (flip mod 100 <$> randomIO)

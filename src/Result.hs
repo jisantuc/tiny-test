@@ -49,7 +49,7 @@ success = Result $ Success ()
 -- conses it onto a list, wraps that list in a `Failure` from `Validation`,
 -- and wraps that `Failure` in the `Result` type.
 failure :: Text -> Result
-failure = Result . Failure . (flip (:) $ []) . FailureReason
+failure = Result . Failure . flip (:) [] . FailureReason
 
 errText :: FailureReason -> Chunk
 errText (FailureReason err) =
@@ -64,7 +64,7 @@ errTextLine err =
 pretty :: Result -> Chunk
 pretty (Result (Success _)) =
   "Success!" & fore green
-pretty (Result (Failure (err : []))) =
+pretty (Result (Failure [err])) =
   errText err
 pretty (Result (Failure errs)) =
   mconcat $ errTextLine <$> errs
