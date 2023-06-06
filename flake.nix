@@ -9,13 +9,8 @@
     let
       pkgs = import nixpkgs { system = "x86_64-darwin"; };
       cabal = pkgs.cabal-install;
-      haskellPackages = with pkgs.haskellPackages; [
-        rainbow
-        random
-        text
-        validation
-      ];
       ghc = pkgs.haskellPackages.ghcWithPackages (p: [
+        p.haskell-language-server
         p.rainbow
         p.random
         p.text
